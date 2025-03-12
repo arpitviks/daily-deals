@@ -10,4 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface PublicControllerInterface {
     @PostMapping("/create-user")
     ResponseEntity<Object> addUser(@Valid @RequestBody User user, BindingResult result);
+
+    @PostMapping("/login")
+    ResponseEntity<String> loginUser(@RequestBody User user);
 }
