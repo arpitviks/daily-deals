@@ -1,8 +1,6 @@
 package com.dailyDeals.dailyDeals_v6.configuration;
 
-import com.dailyDeals.dailyDeals_v6.filter.JwtFilter;
 import com.dailyDeals.dailyDeals_v6.services.CustomUserDetailService;
-import com.dailyDeals.dailyDeals_v6.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +17,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -27,10 +24,6 @@ public class SpringSecurity {
 
     @Autowired
     private CustomUserDetailService customUserDetailService;
-
-    @Autowired
-    private JwtFilter jwtFilter;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //Products
@@ -64,14 +57,13 @@ public class SpringSecurity {
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/public/**").permitAll()
                 );
-        //http.httpBasic(Customizer.withDefaults());
+        http.httpBasic(Customizer.withDefaults());
         http.sessionManagement(httpSecuritySessionManagementConfigurer ->
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.csrf(csrf -> {
             csrf.disable();
         }).cors(cors -> cors.disable());
         http.authenticationProvider(daoAuthenticationProvider());
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
