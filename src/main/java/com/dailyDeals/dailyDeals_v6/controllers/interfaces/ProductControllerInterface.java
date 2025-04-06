@@ -1,7 +1,7 @@
 package com.dailyDeals.dailyDeals_v6.controllers.interfaces;
 
 import com.dailyDeals.dailyDeals_v6.customExceptions.CustomGlobalException;
-import com.dailyDeals.dailyDeals_v6.models.Product;
+import com.dailyDeals.dailyDeals_v6.models.ProductEntity;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 public interface ProductControllerInterface {
     @PostMapping("/")
-    ResponseEntity<Object> addProduct(@Valid @RequestBody Product product, BindingResult result) throws CustomGlobalException;
+    ResponseEntity<Object> addProduct(@Valid @RequestBody ProductEntity product, BindingResult result) throws CustomGlobalException;
 
     @GetMapping("/")
     ResponseEntity<Object> getAllProducts() throws CustomGlobalException;
@@ -21,5 +21,5 @@ public interface ProductControllerInterface {
     ResponseEntity<Object> getProduct(@PathVariable int productId) throws CustomGlobalException;
 
     @PatchMapping("/")
-    ResponseEntity<Object> updateProduct(@RequestBody Product productToUpdate) throws CustomGlobalException, IllegalAccessException;
+    ResponseEntity<Object> updateProduct(@RequestBody ProductEntity productToUpdate) throws CustomGlobalException, IllegalAccessException;
 }

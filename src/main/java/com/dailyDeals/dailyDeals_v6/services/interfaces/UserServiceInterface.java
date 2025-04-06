@@ -1,18 +1,18 @@
 package com.dailyDeals.dailyDeals_v6.services.interfaces;
 
 import com.dailyDeals.dailyDeals_v6.customExceptions.CustomGlobalException;
-import com.dailyDeals.dailyDeals_v6.models.User;
+import com.dailyDeals.dailyDeals_v6.models.UserEntity;
 
 import java.util.List;
 
 public interface UserServiceInterface {
-    public User saveUser(User user);
-    public List<User> saveUsers(List<User> user);
-    public List<User> getUsers();
-    public User getUser(int id);
+    public UserEntity saveUser(UserEntity user);
+    public List<UserEntity> saveUsers(List<UserEntity> user);
+    public List<UserEntity> getUsers();
+    public UserEntity getUser(int id);
 
-    public User getUser(String username) throws CustomGlobalException;
+    public UserEntity getUser(String username) throws CustomGlobalException;
 
     public Object deleteUser(int id);
-    public User updateUser(User user);
+    public UserEntity updateUser(UserEntity user);
 }

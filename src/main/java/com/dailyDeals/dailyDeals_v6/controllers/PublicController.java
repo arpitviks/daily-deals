@@ -5,8 +5,7 @@ import com.dailyDeals.dailyDeals_v6.controllers.interfaces.PublicControllerInter
 import com.dailyDeals.dailyDeals_v6.customExceptions.CustomGlobalException;
 import com.dailyDeals.dailyDeals_v6.dto.ApiError;
 import com.dailyDeals.dailyDeals_v6.dto.AuthResponse;
-import com.dailyDeals.dailyDeals_v6.models.Product;
-import com.dailyDeals.dailyDeals_v6.models.User;
+import com.dailyDeals.dailyDeals_v6.models.UserEntity;
 import com.dailyDeals.dailyDeals_v6.services.ProductService;
 import com.dailyDeals.dailyDeals_v6.services.UserService;
 import com.dailyDeals.dailyDeals_v6.utils.JwtUtil;
@@ -19,10 +18,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping("/public")
@@ -44,19 +45,19 @@ public class PublicController implements PublicControllerInterface {
 
     @PostMapping("/create-user")
     @Override
-    public ResponseEntity<Object> addUser(@Valid @RequestBody User user, BindingResult result) {
+    public ResponseEntity<Object> addUser(@Valid @RequestBody UserEntity user, BindingResult result) {
         if (result.hasErrors()) {
             CustomLogger.setDebugMessage("this is it");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError(HttpStatus.BAD_REQUEST, "Issue with the request body", new Date()));
         }
-        User newUser = userService.saveUser(user);
+        UserEntity newUser = userService.saveUser(user);
         //CustomLogger.set("The new Logging message", String.valueOf(LoggingLevels.info));
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
     @PostMapping("/login")
     @Override
-    public ResponseEntity<Object> loginUser(@RequestBody User user) {
+    public ResponseEntity<Object> loginUser(@RequestBody UserEntity user) {
         try{
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
@@ -64,6 +65,11 @@ public class PublicController implements PublicControllerInterface {
             String jwt = jwtUtil.generateToken(userDetails.getUsername());
             AuthResponse authResponse = new AuthResponse(jwt);
             //CustomLogger.setInfoMessage(authResponse.getToken());
+            String jwtJson = """
+                    {
+                    "token":"%s"
+                    }
+                    """.formatted(jwt);
             return ResponseEntity.status(HttpStatus.OK).body(authResponse);
             //return new ResponseEntity<>(jwt, HttpStatus.OK);
         }catch (Exception e){

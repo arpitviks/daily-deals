@@ -25,21 +25,21 @@ public class CustomOrder {
 
     @ManyToOne
     @JoinColumn(name = "fk_deal_id")
-    private Deal deal;
+    private DealEntity deal;
 
     @ManyToOne
     @JoinColumn(name = "fk_customer_id")
-    private User user;
+    private UserEntity user;
 
     @Column(name = "purchaseDate", nullable = false)
     private LocalDate purchaseDate;
 
 
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 
@@ -59,11 +59,11 @@ public class CustomOrder {
         this.orderStatus = orderStatus;
     }
 
-    public Deal getDeal() {
+    public DealEntity getDeal() {
         return deal;
     }
 
-    public void setDeal(Deal deal) {
+    public void setDeal(DealEntity deal) {
         this.deal = deal;
     }
 

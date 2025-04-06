@@ -5,15 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.net.URL;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
 @Entity
-@Table(name = "PRODUCT")
-public class Product{
+@Table(name = "PRODUCT_ENTITY")
+public class ProductEntity{
 
     @Id
     @GeneratedValue

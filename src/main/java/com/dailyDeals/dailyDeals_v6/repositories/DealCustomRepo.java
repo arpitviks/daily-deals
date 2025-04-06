@@ -1,27 +1,26 @@
 package com.dailyDeals.dailyDeals_v6.repositories;
 
 import com.dailyDeals.dailyDeals_v6.customExceptions.CustomGlobalException;
-import com.dailyDeals.dailyDeals_v6.models.Deal;
-import com.dailyDeals.dailyDeals_v6.models.Product;
-import com.dailyDeals.dailyDeals_v6.models.User;
-import com.dailyDeals.dailyDeals_v6.repositories.interfaces.DealCustomRepoInteface;
+import com.dailyDeals.dailyDeals_v6.models.DealEntity;
+import com.dailyDeals.dailyDeals_v6.models.ProductEntity;
+import com.dailyDeals.dailyDeals_v6.models.UserEntity;
+import com.dailyDeals.dailyDeals_v6.repositories.interfaces.DealCustomRepoInterface;
 import com.dailyDeals.dailyDeals_v6.repositories.interfaces.DealRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public class DealCustomRepo implements DealCustomRepoInteface {
+public class DealCustomRepo implements DealCustomRepoInterface {
     @Autowired
     private DealRepo dealRepo;
 
     @Override
-    public Deal addDeal(Deal deal, User user) {
+    public DealEntity addDeal(DealEntity deal, UserEntity user) {
         if (deal != null && deal.getDealQuantity() > 0) {
             deal.setStartTime(LocalDateTime.now());
             deal.setEndTime(LocalDateTime.now().plusHours(deal.getActiveHour()));
@@ -33,8 +32,8 @@ public class DealCustomRepo implements DealCustomRepoInteface {
     }
 
     @Override
-    public List<Deal> getAllDeals() {
-        List<Deal> deals = dealRepo.findAll();
+    public List<DealEntity> getAllDeals() {
+        List<DealEntity> deals = dealRepo.findAll();
         if (!deals.isEmpty()) {
             return deals;
         }
@@ -42,15 +41,15 @@ public class DealCustomRepo implements DealCustomRepoInteface {
     }
 
     @Override
-    public Deal getDeal(int dealId) {
-        Deal deal = dealRepo.findById(dealId).orElse(null);
+    public DealEntity getDeal(int dealId) {
+        DealEntity deal = dealRepo.findById(dealId).orElse(null);
         if (deal != null) return deal;
         else throw new CustomGlobalException("Deal is not available", false, true);
     }
 
     @Override
     public Object deleteDeal(int dealId) {
-        Deal deal = this.getDeal(dealId);
+        DealEntity deal = this.getDeal(dealId);
         dealRepo.deleteById(deal.getDealId());
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode jsonObject = objectMapper.createObjectNode();
@@ -60,8 +59,8 @@ public class DealCustomRepo implements DealCustomRepoInteface {
     }
 
     @Override
-    public Deal updateDeal(Deal deal, Product product) throws IllegalAccessException {
-        Deal existingDeal = this.getDeal(deal.getDealId());
+    public DealEntity updateDeal(DealEntity deal, ProductEntity product) throws IllegalAccessException {
+        DealEntity existingDeal = this.getDeal(deal.getDealId());
         existingDeal.setDealStatus(deal.getDealStatus());
         existingDeal.setDealQuantity(deal.getDealQuantity());
         existingDeal.setProduct(product);
@@ -80,14 +79,14 @@ public class DealCustomRepo implements DealCustomRepoInteface {
     }
 
     @Override
-    public Deal increaseDealQuantity(int dealId) {
-        Deal existingDeal = this.getDeal(dealId);
+    public DealEntity increaseDealQuantity(int dealId) {
+        DealEntity existingDeal = this.getDeal(dealId);
         existingDeal.setDealQuantity(existingDeal.getDealQuantity() + 1);
         return dealRepo.save(existingDeal);
     }
     @Override
-    public Deal decreaseDealQuantity(int dealId){
-        Deal existingDeal = this.getDeal(dealId);
+    public DealEntity decreaseDealQuantity(int dealId){
+        DealEntity existingDeal = this.getDeal(dealId);
         if(existingDeal.getDealQuantity() > 0 ){
             existingDeal.setDealQuantity(existingDeal.getDealQuantity() - 1);
             return dealRepo.save(existingDeal);

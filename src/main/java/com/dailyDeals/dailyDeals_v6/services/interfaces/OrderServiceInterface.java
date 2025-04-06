@@ -2,8 +2,8 @@ package com.dailyDeals.dailyDeals_v6.services.interfaces;
 
 import com.dailyDeals.dailyDeals_v6.customExceptions.CustomGlobalException;
 import com.dailyDeals.dailyDeals_v6.models.CustomOrder;
-import com.dailyDeals.dailyDeals_v6.models.Deal;
-import com.dailyDeals.dailyDeals_v6.models.User;
+import com.dailyDeals.dailyDeals_v6.models.DealEntity;
+import com.dailyDeals.dailyDeals_v6.models.UserEntity;
 
 import java.util.List;
 
@@ -21,5 +21,5 @@ public interface OrderServiceInterface {
     CustomOrder updateOrder(int orderId, CustomOrder updatedOrder, String userName) throws CustomGlobalException, IllegalAccessException;
 
     //check user has already purchased the deal or not
-    Boolean checkDealPurchasedByUser(User user, Deal deal) throws CustomGlobalException;
+    Boolean checkDealPurchasedByUser(UserEntity user, DealEntity deal) throws CustomGlobalException;
 }

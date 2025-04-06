@@ -4,25 +4,24 @@ import com.dailyDeals.dailyDeals_v6.customExceptions.CustomGlobalException;
 import com.dailyDeals.dailyDeals_v6.enums.OrderStatus;
 import com.dailyDeals.dailyDeals_v6.enums.UserRole;
 import com.dailyDeals.dailyDeals_v6.models.CustomOrder;
-import com.dailyDeals.dailyDeals_v6.models.Deal;
-import com.dailyDeals.dailyDeals_v6.models.User;
+import com.dailyDeals.dailyDeals_v6.models.DealEntity;
+import com.dailyDeals.dailyDeals_v6.models.UserEntity;
 import com.dailyDeals.dailyDeals_v6.repositories.interfaces.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Repository
 public class OrderCustomRepo implements com.dailyDeals.dailyDeals_v6.repositories.interfaces.OrderCustomRepoInterface {
     @Autowired
     OrderRepo orderRepo;
     @Override
-    public CustomOrder PurchaseOrder(Deal deal, User user) throws CustomGlobalException {
+    public CustomOrder PurchaseOrder(DealEntity deal, UserEntity user) throws CustomGlobalException {
         if(deal != null && user != null){
             CustomOrder order = new CustomOrder();
             order.setDeal(deal);
@@ -47,7 +46,7 @@ public class OrderCustomRepo implements com.dailyDeals.dailyDeals_v6.repositorie
         }else throw new CustomGlobalException("Order not found",false,true);
     }
     @Override
-    public List<CustomOrder> getCustomerOrders(User user) throws CustomGlobalException {
+    public List<CustomOrder> getCustomerOrders(UserEntity user) throws CustomGlobalException {
         List<CustomOrder> orders = orderRepo.findAll();
         if(!orders.isEmpty() && user != null ) {
             List<CustomOrder> customerOrders = orders.stream()
@@ -80,7 +79,7 @@ public class OrderCustomRepo implements com.dailyDeals.dailyDeals_v6.repositorie
         return orderRepo.save(existingOrder);
     }
     @Override
-    public Boolean checkDealPurchasedByUser(User user, Deal deal) throws CustomGlobalException {
+    public Boolean checkDealPurchasedByUser(UserEntity user, DealEntity deal) throws CustomGlobalException {
         List<CustomOrder> foundOrder = orderRepo.findAll().stream().
                 filter(currOrder -> currOrder.getUser().getId() == user.getId() &&
                         currOrder.getDeal().getDealId() == deal.getDealId())
@@ -91,7 +90,7 @@ public class OrderCustomRepo implements com.dailyDeals.dailyDeals_v6.repositorie
 
     }
     @Override
-    public boolean checkOrderOwner(CustomOrder order, User owner){
+    public boolean checkOrderOwner(CustomOrder order, UserEntity owner){
         if(Objects.equals(owner.getUserRole(), UserRole.Admin.toString())){
             return true;
         }else return order.getUser().getId() == owner.getId();

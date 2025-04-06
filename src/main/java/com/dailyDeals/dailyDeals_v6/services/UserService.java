@@ -1,14 +1,12 @@
 package com.dailyDeals.dailyDeals_v6.services;
 
 import com.dailyDeals.dailyDeals_v6.customExceptions.CustomGlobalException;
-import com.dailyDeals.dailyDeals_v6.models.User;
+import com.dailyDeals.dailyDeals_v6.models.UserEntity;
 import com.dailyDeals.dailyDeals_v6.repositories.interfaces.UserRepo;
 import com.dailyDeals.dailyDeals_v6.services.interfaces.UserServiceInterface;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +19,7 @@ public class UserService implements UserServiceInterface {
     private UserRepo userRepo;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Override
-    public User saveUser(User user) throws CustomGlobalException{
+    public UserEntity saveUser(UserEntity user) throws CustomGlobalException{
         try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepo.save(user);
@@ -31,7 +29,7 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public List<User> saveUsers(List<User> user) throws CustomGlobalException {
+    public List<UserEntity> saveUsers(List<UserEntity> user) throws CustomGlobalException {
         try {
             return userRepo.saveAll(user);
         } catch (Exception ex) {
@@ -40,7 +38,7 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public List<User> getUsers() throws CustomGlobalException{
+    public List<UserEntity> getUsers() throws CustomGlobalException{
         try {
             return userRepo.findAll();
         } catch (Exception ex) {
@@ -49,9 +47,9 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public User getUser(int id) throws CustomGlobalException{
+    public UserEntity getUser(int id) throws CustomGlobalException{
         try {
-            User existingUser = userRepo.findById(id).orElse(null);
+            UserEntity existingUser = userRepo.findById(id).orElse(null);
             if (existingUser != null) {
                 return existingUser;
             } else throw new CustomGlobalException("User is not available", true, false);
@@ -61,9 +59,9 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public User getUser(String username) throws CustomGlobalException{
+    public UserEntity getUser(String username) throws CustomGlobalException{
         try {
-            User existingUser = userRepo.findByUsername(username).orElse(null);
+            UserEntity existingUser = userRepo.findByUsername(username).orElse(null);
             if (existingUser != null) {
                 return existingUser;
             } else throw new CustomGlobalException("User is not available", true, false);
@@ -90,8 +88,8 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public User updateUser(User user) throws CustomGlobalException{
-        User existingUser = getUser(user.getId());
+    public UserEntity updateUser(UserEntity user) throws CustomGlobalException{
+        UserEntity existingUser = getUser(user.getId());
         if (existingUser != null) {
             existingUser.setUserRole(user.getUserRole());
             existingUser.setUsername(user.getUsername());

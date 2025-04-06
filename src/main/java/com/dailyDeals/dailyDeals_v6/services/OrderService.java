@@ -4,8 +4,8 @@ import com.dailyDeals.dailyDeals_v6.customExceptions.CustomGlobalException;
 import com.dailyDeals.dailyDeals_v6.enums.OrderStatus;
 import com.dailyDeals.dailyDeals_v6.enums.UserRole;
 import com.dailyDeals.dailyDeals_v6.models.CustomOrder;
-import com.dailyDeals.dailyDeals_v6.models.Deal;
-import com.dailyDeals.dailyDeals_v6.models.User;
+import com.dailyDeals.dailyDeals_v6.models.DealEntity;
+import com.dailyDeals.dailyDeals_v6.models.UserEntity;
 import com.dailyDeals.dailyDeals_v6.repositories.OrderCustomRepo;
 import com.dailyDeals.dailyDeals_v6.services.interfaces.OrderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ public class OrderService implements OrderServiceInterface {
     private UserService userService;
     @Override
     public CustomOrder purchaseOrder(int dealId, String userName) throws CustomGlobalException {
-        Deal deal = dealService.getDeal(dealId);
-        User user = userService.getUser(userName);
+        DealEntity deal = dealService.getDeal(dealId);
+        UserEntity user = userService.getUser(userName);
         if(checkDealPurchasedByUser(user,deal) && deal.getDealQuantity() > 0 && deal.getEndTime().isAfter(LocalDateTime.now())) {//validate deal present or not and check user is already acquired the deal or not.
             synchronized (this) {
                 dealService.decreaseDealQuantity(deal.getDealId());
@@ -44,7 +44,7 @@ public class OrderService implements OrderServiceInterface {
     }
     @Override
     public List<CustomOrder> getCustomerOrder(String userName) throws CustomGlobalException {
-        User user = userService.getUser(userName);
+        UserEntity user = userService.getUser(userName);
         return orderCustomRepo.getCustomerOrders(user);
     }
     @Override
@@ -55,7 +55,7 @@ public class OrderService implements OrderServiceInterface {
     public CustomOrder cancelOrder(int orderId, String userName) throws CustomGlobalException {//check user present or not and order present else throw exception
         int dealId = this.getOrder(orderId).getDeal().getDealId();
         CustomOrder order = this.getOrder(orderId);
-        User user1 = userService.getUser(userName);
+        UserEntity user1 = userService.getUser(userName);
         if(orderCustomRepo.checkOrderOwner(order,user1) && order.getOrderStatus() != OrderStatus.Canceled){
             dealService.increaseDealQuantity(dealId);
             return orderCustomRepo.cancelOrder(orderId);
@@ -71,7 +71,7 @@ public class OrderService implements OrderServiceInterface {
     }
     //check user has already purchased the deal or not
     @Override
-    public Boolean checkDealPurchasedByUser(User user, Deal deal) throws CustomGlobalException {
+    public Boolean checkDealPurchasedByUser(UserEntity user, DealEntity deal) throws CustomGlobalException {
         return orderCustomRepo.checkDealPurchasedByUser(user,deal);
     }
 }

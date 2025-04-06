@@ -3,7 +3,7 @@ package com.dailyDeals.dailyDeals_v6.controllers;
 import com.dailyDeals.dailyDeals_v6.controllers.interfaces.DealControllerInterface;
 import com.dailyDeals.dailyDeals_v6.customExceptions.CustomGlobalException;
 import com.dailyDeals.dailyDeals_v6.dto.ApiError;
-import com.dailyDeals.dailyDeals_v6.models.Deal;
+import com.dailyDeals.dailyDeals_v6.models.DealEntity;
 import com.dailyDeals.dailyDeals_v6.services.DealService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class DealController implements DealControllerInterface {
 
     @PostMapping("/")
     @Override
-    public ResponseEntity<Object> addDeal(@Valid @RequestBody Deal deal, BindingResult result) throws CustomGlobalException {
+    public ResponseEntity<Object> addDeal(@Valid @RequestBody DealEntity deal, BindingResult result) throws CustomGlobalException {
         if (result.hasErrors()) {
             // Handle validation errors
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError( HttpStatus.BAD_REQUEST,(result.getAllErrors()).toString(),new Date()));
@@ -33,13 +33,13 @@ public class DealController implements DealControllerInterface {
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        Deal dealToCreate = dealService.addDeal(deal,userName);
+        DealEntity dealToCreate = dealService.addDeal(deal,userName);
         return ResponseEntity.status(HttpStatus.OK).body(dealToCreate);
     }
     @GetMapping("/")
     @Override
     public ResponseEntity<Object> getAllDeals() throws CustomGlobalException {
-        List<Deal> dealList = dealService.getAllDeals();
+        List<DealEntity> dealList = dealService.getAllDeals();
         return ResponseEntity.status(HttpStatus.OK).body(dealList);
     }
     @DeleteMapping("/{dealId}")
@@ -52,16 +52,16 @@ public class DealController implements DealControllerInterface {
     }
     @PatchMapping("/")
     @Override
-    public ResponseEntity<Object> updateDeal(@RequestBody Deal dealToUpdate) throws CustomGlobalException, IllegalAccessException {
+    public ResponseEntity<Object> updateDeal(@RequestBody DealEntity dealToUpdate) throws CustomGlobalException, IllegalAccessException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        Deal updatedDeal = dealService.updateDeal(dealToUpdate,userName);
+        DealEntity updatedDeal = dealService.updateDeal(dealToUpdate,userName);
         return ResponseEntity.status(HttpStatus.OK).body(updatedDeal);
     }
     @GetMapping("/{dealId}")
     @Override
     public ResponseEntity<Object> getDeal(@PathVariable int dealId) throws CustomGlobalException {
-        Deal deal = dealService.getDeal(dealId);
+        DealEntity deal = dealService.getDeal(dealId);
         return ResponseEntity.status(HttpStatus.OK).body(deal);
     }
     @PatchMapping("/increaseQuantity/{dealId}")
@@ -69,7 +69,7 @@ public class DealController implements DealControllerInterface {
     public ResponseEntity<Object> increaseQuantity(@PathVariable int dealId) throws CustomGlobalException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        Deal deal = dealService.increaseDealQuantityForAdmins(dealId,userName);
+        DealEntity deal = dealService.increaseDealQuantityForAdmins(dealId,userName);
         return ResponseEntity.status(HttpStatus.OK).body(deal);
     }
     @PatchMapping("/decreaseQuantity/{dealId}")
@@ -77,7 +77,7 @@ public class DealController implements DealControllerInterface {
     public ResponseEntity<Object> decreaseQuantity(@PathVariable int dealId) throws CustomGlobalException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        Deal deal = dealService.decreaseDealQuantityForAdmins(dealId,userName);
+        DealEntity deal = dealService.decreaseDealQuantityForAdmins(dealId,userName);
         return ResponseEntity.status(HttpStatus.OK).body(deal);
     }
 }

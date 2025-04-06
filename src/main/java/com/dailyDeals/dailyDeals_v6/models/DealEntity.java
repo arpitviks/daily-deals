@@ -2,10 +2,8 @@ package com.dailyDeals.dailyDeals_v6.models;
 
 import com.dailyDeals.dailyDeals_v6.enums.DealStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -14,13 +12,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-@Table(name = "DEAL")
-public class Deal {
-    public Product getProduct() {
+@Table(name = "DEAL_ENTITY")
+public class DealEntity {
+    public ProductEntity getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(ProductEntity product) {
         this.product = product;
     }
 
@@ -56,11 +54,11 @@ public class Deal {
         this.dealStatus = dealStatus;
     }
 
-    public User getSeller() {
+    public UserEntity getSeller() {
         return seller;
     }
 
-    public void setSeller(User seller) {
+    public void setSeller(UserEntity seller) {
         this.seller = seller;
     }
 
@@ -91,12 +89,12 @@ public class Deal {
 
     @ManyToOne
     @JoinColumn(name = "fk_prod_id")
-    private Product product;
+    private ProductEntity product;
 
 
     @ManyToOne
     @JoinColumn(name = "fk_seller_id")
-    private User seller;
+    private UserEntity seller;
 
     @Column(name = "deal_quantity", nullable = false)
     private int dealQuantity = 0;

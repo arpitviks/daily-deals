@@ -1,26 +1,26 @@
 package com.dailyDeals.dailyDeals_v6.services.interfaces;
 
 import com.dailyDeals.dailyDeals_v6.customExceptions.CustomGlobalException;
-import com.dailyDeals.dailyDeals_v6.models.Deal;
+import com.dailyDeals.dailyDeals_v6.models.DealEntity;
 
 import java.util.List;
 
 public interface DealServiceInterface {
-    Deal addDeal(Deal deal, String userName) throws CustomGlobalException;
+    DealEntity addDeal(DealEntity deal, String userName) throws CustomGlobalException;
 
-    List<Deal> getAllDeals() throws CustomGlobalException;
+    List<DealEntity> getAllDeals() throws CustomGlobalException;
 
-    Deal getDeal(int dealId) throws CustomGlobalException;
+    DealEntity getDeal(int dealId) throws CustomGlobalException;
 
     Object deleteDeal(int dealId, String userName) throws CustomGlobalException;
 
-    Deal updateDeal(Deal deal, String userName) throws CustomGlobalException, IllegalAccessException;
+    DealEntity updateDeal(DealEntity deal, String userName) throws CustomGlobalException, IllegalAccessException;
 
-    Deal increaseDealQuantityForAdmins(int dealId, String userName);
+    DealEntity increaseDealQuantityForAdmins(int dealId, String userName);
 
-    Deal decreaseDealQuantityForAdmins(int dealId, String userName);
+    DealEntity decreaseDealQuantityForAdmins(int dealId, String userName);
 
-    Deal increaseDealQuantity(int dealId);
+    DealEntity increaseDealQuantity(int dealId);
 
-    Deal decreaseDealQuantity(int dealId);
+    DealEntity decreaseDealQuantity(int dealId);
 }
